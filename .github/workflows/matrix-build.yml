@@ -1,0 +1,38 @@
+name: Matrix Build with Artifacts
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    # Define a 3-way matrix; you can change these versions if you like
+    strategy:
+      matrix:
+        node-version: [14, 16, 18]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Required step identifier
+      - name: matrix-675a2c9
+        run: echo "Building for Node.js version ${{ matrix.node-version }}"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Generate build artifact
+        run: |
+          echo "Build output for Node.js version ${{ matrix.node-version }}" > output.txt
+          echo "Node $(node -v)" >> output.txt
+          echo "Build completed successfully!" >> output.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-675a2c9-v${{ matrix.node-version }}
+          path: output.txt
